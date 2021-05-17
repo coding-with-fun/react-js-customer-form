@@ -6,3 +6,15 @@
     border-color: #ced4da;
     color: #212529;
 }
+
+.input-error {
+    border-color: var(--bs-danger) !important;
+    border-width: 2px;
+    box-shadow: none !important;
+    outline: 0 none;
+}
+
+.error_message {
+    color: var(--bs-danger) !important;
+    font-weight: 600;
+}

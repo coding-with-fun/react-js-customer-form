@@ -2,24 +2,81 @@ import React, { useState } from "react";
 
 const App = () => {
     let currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() + 30);
+    // currentDate.setDate(currentDate.getDate() + 30);
     currentDate = currentDate.toISOString().split("T")[0];
 
     const initialUserValues = {
         order_no: "123abc",
+
         product_name: "Watch",
+
         delivery_date: currentDate,
+        delivery_date_error: false,
+
         delivery_time_slot: "",
+        delivery_time_slot_error: false,
+
         message_card: "",
+
         recipient_name: "",
+
         recipient_contact_number: "",
+        recipient_contact_number_error: false,
+
         recipient_address: "",
+        recipient_address_error: false,
+
         sender_name: "Test User",
+        sender_name_error: false,
+
         contact_number: "",
+        contact_number_error: false,
+
         email_address: "testuser@yopmail.com",
     };
 
     const [userValues, setUserValues] = useState(initialUserValues);
+
+    const handleSubmitUserValues = (e) => {
+        e.preventDefault();
+        let userValuesCopy = { ...userValues };
+
+        if (!userValues.delivery_time_slot) {
+            userValuesCopy["delivery_time_slot_error"] = true;
+            setUserValues(userValuesCopy);
+            return;
+        }
+
+        if (
+            !userValues.recipient_contact_number ||
+            userValues.recipient_contact_number.length < 10
+        ) {
+            userValuesCopy["recipient_contact_number_error"] = true;
+            setUserValues(userValuesCopy);
+            return;
+        }
+
+        if (!userValues.recipient_address) {
+            userValuesCopy["recipient_address_error"] = true;
+            setUserValues(userValuesCopy);
+            return;
+        }
+
+        if (!userValues.sender_name) {
+            userValuesCopy["sender_name_error"] = true;
+            setUserValues(userValuesCopy);
+            return;
+        }
+
+        if (
+            !userValues.contact_number ||
+            userValues.contact_number.length < 10
+        ) {
+            userValuesCopy["contact_number_error"] = true;
+            setUserValues(userValuesCopy);
+            return;
+        }
+    };
 
     const handleUserValues = (event) => {
         const inputValue = event.target.value;
@@ -44,16 +101,25 @@ const App = () => {
             return;
         }
 
+        if (inputId === "delivery_date") {
+            const inputDate = new Date(inputValue);
+            const todayDate = new Date(initialUserValues.delivery_date);
+            let diff = inputDate - todayDate;
+            diff = Math.floor(diff / 86400000);
+            if (diff > 30) {
+                userValuesCopy["delivery_date_error"] = true;
+            } else {
+                userValuesCopy["delivery_date_error"] = false;
+            }
+        }
+
         userValuesCopy[inputId] = inputValue;
         setUserValues(userValuesCopy);
     };
 
     return (
         <div className="container mt-5">
-            <form
-                className="row g-3 border p-3 m-4 needs-validation"
-                novalidate
-            >
+            <form className="row g-3 border p-3 m-4">
                 <div className="mb-3">
                     <label htmlFor="order_no" className="form-label">
                         Order Number
@@ -88,12 +154,24 @@ const App = () => {
                     </label>
                     <input
                         type="date"
-                        className="form-control"
+                        className={`form-control ${
+                            userValues.delivery_date_error ? `input-error` : ``
+                        }`}
                         id="delivery_date"
                         value={userValues.delivery_date}
                         onChange={(e) => handleUserValues(e)}
-                        required
+                        min={initialUserValues.delivery_date}
                     />
+                    <div
+                        className={`${
+                            userValues.delivery_date_error
+                                ? `visible error_message`
+                                : `invisible`
+                        }`}
+                    >
+                        {userValues.delivery_date_error &&
+                            "Delivery date should be only 30 days later from today"}
+                    </div>
                 </div>
 
                 <div className="container mb-3">
@@ -101,11 +179,14 @@ const App = () => {
                         Delivery Time Slot
                     </label>
                     <select
-                        className="form-select"
+                        className={`form-select ${
+                            userValues.delivery_time_slot_error
+                                ? `input-error`
+                                : ``
+                        }`}
                         id="delivery_time_slot"
                         defaultValue={"DEFAULT"}
                         onChange={(e) => handleUserValues(e)}
-                        required
                     >
                         <option disabled value="DEFAULT">
                             Time Slot
@@ -117,6 +198,16 @@ const App = () => {
                             12th 2021)
                         </option>
                     </select>
+                    <div
+                        className={`${
+                            userValues.delivery_time_slot_error
+                                ? `visible error_message`
+                                : `invisible`
+                        }`}
+                    >
+                        {userValues.delivery_time_slot_error &&
+                            "Please select one time slot"}
+                    </div>
                 </div>
 
                 <div className="mb-3">
@@ -146,7 +237,7 @@ const App = () => {
                     />
                 </div>
 
-                <div className="mb-3">
+                <div>
                     <label
                         htmlFor="recipient_contact_number"
                         className="form-label"
@@ -155,13 +246,26 @@ const App = () => {
                     </label>
                     <input
                         type="number"
-                        className="form-control"
+                        className={`form-control ${
+                            userValues.recipient_contact_number_error
+                                ? `input-error`
+                                : ``
+                        }`}
                         id="recipient_contact_number"
                         placeholder="Enter recipient contact number"
                         value={userValues.recipient_contact_number}
                         onChange={(e) => handleUserValues(e)}
-                        required
                     />
+                    <div
+                        className={`${
+                            userValues.recipient_contact_number_error
+                                ? `visible error_message`
+                                : `invisible`
+                        }`}
+                    >
+                        {userValues.recipient_contact_number_error &&
+                            "Mobile number should be in the format 01xxxx, between 10 to 11 digits"}
+                    </div>
                 </div>
 
                 <div className="mb-3">
@@ -170,13 +274,26 @@ const App = () => {
                     </label>
                     <input
                         type="text"
-                        className="form-control"
+                        className={`form-control ${
+                            userValues.recipient_address_error
+                                ? `input-error`
+                                : ``
+                        }`}
                         id="recipient_address"
                         placeholder="Enter recipient address"
                         value={userValues.recipient_address}
                         onChange={(e) => handleUserValues(e)}
-                        required
                     />
+                    <div
+                        className={`${
+                            userValues.recipient_address_error
+                                ? `visible error_message`
+                                : `invisible`
+                        }`}
+                    >
+                        {userValues.recipient_address_error &&
+                            "Please enter recipient address"}
+                    </div>
                 </div>
 
                 <div className="mb-3">
@@ -185,13 +302,24 @@ const App = () => {
                     </label>
                     <input
                         type="text"
-                        className="form-control"
+                        className={`form-control ${
+                            userValues.sender_name_error ? `input-error` : ``
+                        }`}
                         id="sender_name"
                         placeholder="Enter sender name"
                         value={userValues.sender_name}
                         onChange={(e) => handleUserValues(e)}
-                        required
                     />
+                    <div
+                        className={`${
+                            userValues.sender_name_error
+                                ? `visible error_message`
+                                : `invisible`
+                        }`}
+                    >
+                        {userValues.sender_name_error &&
+                            "Please enter recipient address"}
+                    </div>
                 </div>
 
                 <div className="mb-3">
@@ -200,13 +328,24 @@ const App = () => {
                     </label>
                     <input
                         type="number"
-                        className="form-control"
+                        className={`form-control ${
+                            userValues.contact_number_error ? `input-error` : ``
+                        }`}
                         id="contact_number"
                         placeholder="Enter contact number"
                         value={userValues.contact_number}
                         onChange={(e) => handleUserValues(e)}
-                        required
                     />
+                    <div
+                        className={`${
+                            userValues.contact_number_error
+                                ? `visible error_message`
+                                : `invisible`
+                        }`}
+                    >
+                        {userValues.contact_number_error &&
+                            "Mobile number should be in the format 01xxxx, between 10 to 11 digits"}
+                    </div>
                 </div>
 
                 <div className="mb-3">
@@ -224,7 +363,11 @@ const App = () => {
                 </div>
 
                 <div className="col-12">
-                    <button className="btn btn-primary" type="submit">
+                    <button
+                        className="btn btn-primary"
+                        type="submit"
+                        onClick={handleSubmitUserValues}
+                    >
                         Submit form
                     </button>
                 </div>
