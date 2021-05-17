@@ -14,7 +14,7 @@ const App = () => {
         recipient_name: "",
         recipient_contact_number: "",
         recipient_address: "",
-        sender_name: "",
+        sender_name: "Test User",
         contact_number: "",
         email_address: "testuser@yopmail.com",
     };
@@ -25,6 +25,24 @@ const App = () => {
         const inputValue = event.target.value;
         const inputId = event.target.id;
         let userValuesCopy = { ...userValues };
+
+        if (
+            // Check for message card data
+            (inputId === "message_card" && inputValue.length > 2500) ||
+            // Check for recipient name data
+            (inputId === "recipient_name" && inputValue.length > 500) ||
+            // Check for recipient contact number data
+            (inputId === "recipient_contact_number" &&
+                inputValue.length > 11) ||
+            // Check for recipient address data
+            (inputId === "recipient_address" && inputValue.length > 500) ||
+            // Check for sender name data
+            (inputId === "sender_name" && inputValue.length > 200) ||
+            // Check for recipient contact number data
+            (inputId === "contact_number" && inputValue.length > 11)
+        ) {
+            return;
+        }
 
         userValuesCopy[inputId] = inputValue;
         setUserValues(userValuesCopy);
