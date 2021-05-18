@@ -336,6 +336,15 @@ const App = () => {
                             value={userValues.message_card}
                             onChange={(e) => handleUserValues(e)}
                         />
+                        <div
+                            className={`input_length ${
+                                userValues.message_card.length === 0
+                                    ? `error_input_length`
+                                    : `success_input_length`
+                            }`}
+                        >
+                            {userValues.message_card.length} of 2500 characters
+                        </div>
                     </div>
 
                     <div className="mb-3">
@@ -350,6 +359,15 @@ const App = () => {
                             value={userValues.recipient_name}
                             onChange={(e) => handleUserValues(e)}
                         />
+                        <div
+                            className={`input_length ${
+                                userValues.recipient_name.length === 0
+                                    ? `error_input_length`
+                                    : `success_input_length`
+                            }`}
+                        >
+                            {userValues.recipient_name.length} of 500 characters
+                        </div>
                     </div>
 
                     <div>
@@ -371,6 +389,16 @@ const App = () => {
                             value={userValues.recipient_contact_number}
                             onChange={(e) => handleUserValues(e)}
                         />
+                        <div
+                            className={`input_length ${
+                                userValues.recipient_contact_number.length === 0
+                                    ? `error_input_length`
+                                    : `success_input_length`
+                            }`}
+                        >
+                            {userValues.recipient_contact_number.length} of 11
+                            characters
+                        </div>
                         <div
                             className={`${
                                 userValues.recipient_contact_number_error
@@ -403,6 +431,16 @@ const App = () => {
                             onChange={(e) => handleUserValues(e)}
                         />
                         <div
+                            className={`input_length ${
+                                userValues.recipient_address.length === 0
+                                    ? `error_input_length`
+                                    : `success_input_length`
+                            }`}
+                        >
+                            {userValues.recipient_address.length} of 500
+                            characters
+                        </div>
+                        <div
                             className={`${
                                 userValues.recipient_address_error
                                     ? `visible error_message`
@@ -431,6 +469,15 @@ const App = () => {
                             onChange={(e) => handleUserValues(e)}
                         />
                         <div
+                            className={`input_length ${
+                                userValues.sender_name.length === 0
+                                    ? `error_input_length`
+                                    : `success_input_length`
+                            }`}
+                        >
+                            {userValues.sender_name.length} of 200 characters
+                        </div>
+                        <div
                             className={`${
                                 userValues.sender_name_error
                                     ? `visible error_message`
@@ -458,6 +505,15 @@ const App = () => {
                             value={userValues.contact_number}
                             onChange={(e) => handleUserValues(e)}
                         />
+                        <div
+                            className={`input_length ${
+                                userValues.contact_number.length === 0
+                                    ? `error_input_length`
+                                    : `success_input_length`
+                            }`}
+                        >
+                            {userValues.contact_number.length} of 11 characters
+                        </div>
                         <div
                             className={`${
                                 userValues.contact_number_error

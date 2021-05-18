@@ -18,3 +18,17 @@
     color: var(--bs-danger) !important;
     font-weight: 600;
 }
+
+.input_length {
+    text-align: end;
+    font-weight: 500;
+    margin-top: 6px;
+}
+
+.error_input_length {
+    color: var(--bs-danger);
+}
+
+.success_input_length {
+    color: var(--bs-success);
+}
