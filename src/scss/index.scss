@@ -32,3 +32,12 @@
 .success_input_length {
     color: var(--bs-success);
 }
+
+.incorrect-fields,
+.submitted-form-screen {
+    text-align: center;
+    height: calc(100vh - 6rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
