@@ -147,6 +147,7 @@ const App = () => {
             return;
         }
 
+        // Check for delivery date
         if (inputId === "delivery_date") {
             const inputDate = new Date(inputValue);
             const todayDate = new Date(initialUserValues.delivery_date);
@@ -157,6 +158,12 @@ const App = () => {
             } else {
                 userValuesCopy["delivery_date_error"] = false;
             }
+        }
+
+        const inputFieldName = inputId + "_error";
+
+        if (inputFieldName) {
+            userValuesCopy[inputFieldName] = false;
         }
 
         userValuesCopy[inputId] = inputValue;
@@ -256,10 +263,10 @@ const App = () => {
                                 : ``
                         }`}
                         id="delivery_time_slot"
-                        defaultValue={"DEFAULT"}
+                        defaultValue={userValues.delivery_time_slot}
                         onChange={(e) => handleUserValues(e)}
                     >
-                        <option disabled value="DEFAULT">
+                        <option disabled value="">
                             Time Slot
                         </option>
                         <option>Between 9am to 1pm</option>
