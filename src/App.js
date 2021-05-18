@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import isEmail from "validator/lib/isEmail";
 
 const App = () => {
     let currentDate = new Date();
@@ -10,8 +11,10 @@ const App = () => {
 
     const initialUserValues = {
         order_no: "123abc",
+        order_no_error: false,
 
         product_name: "Watch",
+        product_name_error: false,
 
         delivery_date: currentDate,
         delivery_date_error: false,
@@ -38,49 +41,87 @@ const App = () => {
         contact_number_error: false,
 
         email_address: "testuser@yopmail.com",
+        email_address_error: false,
     };
 
     const [userValues, setUserValues] = useState(initialUserValues);
 
+    const submitFormData = () => {
+        alert("Form submitted successfully");
+        setUserValues(initialUserValues);
+    };
+
     const handleSubmitUserValues = (e) => {
         e.preventDefault();
         let userValuesCopy = { ...userValues };
+        let errorFlag = false;
 
-        if (!userValues.delivery_time_slot) {
+        if (!userValuesCopy.order_no) {
+            userValuesCopy["order_no_error"] = true;
+            errorFlag = true;
+        }
+
+        if (!userValuesCopy.product_name) {
+            userValuesCopy["product_name_error"] = true;
+            errorFlag = true;
+        }
+
+        const inputDate = new Date(userValuesCopy.delivery_date);
+        const todayDate = new Date(initialUserValues.delivery_date);
+        let diff = inputDate - todayDate;
+        diff = Math.floor(diff / 86400000);
+        if (!userValuesCopy.delivery_date || diff > 30) {
+            userValuesCopy["delivery_date_error"] = true;
+            errorFlag = true;
+        }
+
+        if (!userValuesCopy.delivery_time_slot) {
             userValuesCopy["delivery_time_slot_error"] = true;
-            setUserValues(userValuesCopy);
-            return;
+            errorFlag = true;
         }
 
         if (
-            !userValues.recipient_contact_number ||
-            userValues.recipient_contact_number.length < 10
+            !userValuesCopy.recipient_contact_number ||
+            userValuesCopy.recipient_contact_number.length < 10 ||
+            userValuesCopy.recipient_contact_number.length > 11
         ) {
             userValuesCopy["recipient_contact_number_error"] = true;
-            setUserValues(userValuesCopy);
-            return;
+            errorFlag = true;
         }
 
-        if (!userValues.recipient_address) {
+        if (!userValuesCopy.recipient_address) {
             userValuesCopy["recipient_address_error"] = true;
-            setUserValues(userValuesCopy);
-            return;
+            errorFlag = true;
         }
 
-        if (!userValues.sender_name) {
+        if (!userValuesCopy.sender_name) {
             userValuesCopy["sender_name_error"] = true;
-            setUserValues(userValuesCopy);
-            return;
+            errorFlag = true;
         }
 
         if (
-            !userValues.contact_number ||
-            userValues.contact_number.length < 10
+            !userValuesCopy.contact_number ||
+            userValuesCopy.contact_number.length < 10 ||
+            userValuesCopy.contact_number.length > 11
         ) {
             userValuesCopy["contact_number_error"] = true;
-            setUserValues(userValuesCopy);
+            errorFlag = true;
+        }
+
+        if (
+            !userValuesCopy.email_address ||
+            !isEmail(userValuesCopy.email_address)
+        ) {
+            userValuesCopy["email_address_error"] = true;
+            errorFlag = true;
+        }
+
+        setUserValues(userValuesCopy);
+        if (errorFlag) {
             return;
         }
+
+        submitFormData();
     };
 
     const handleUserValues = (event) => {
@@ -131,12 +172,24 @@ const App = () => {
                     </label>
                     <input
                         type="text"
-                        className="form-control"
+                        className={`form-control ${
+                            userValues.order_no_error ? `input-error` : ``
+                        }`}
                         id="order_no"
                         defaultValue={userValues.order_no}
                         disabled
                         readOnly
                     />
+                    <div
+                        className={`${
+                            userValues.order_no_error
+                                ? `visible error_message`
+                                : `invisible`
+                        }`}
+                    >
+                        {userValues.order_no_error &&
+                            "Please enter the order number"}
+                    </div>
                 </div>
 
                 <div className="mb-3">
@@ -145,12 +198,24 @@ const App = () => {
                     </label>
                     <input
                         type="text"
-                        className="form-control"
+                        className={`form-control ${
+                            userValues.product_name_error ? `input-error` : ``
+                        }`}
                         id="product_name"
                         defaultValue={userValues.product_name}
                         disabled
                         readOnly
                     />
+                    <div
+                        className={`${
+                            userValues.product_name_error
+                                ? `visible error_message`
+                                : `invisible`
+                        }`}
+                    >
+                        {userValues.product_name_error &&
+                            "Please enter the product name"}
+                    </div>
                 </div>
 
                 <div className="container mb-3">
@@ -324,7 +389,7 @@ const App = () => {
                         }`}
                     >
                         {userValues.sender_name_error &&
-                            "Please enter recipient address"}
+                            "Please enter sender name"}
                     </div>
                 </div>
 
@@ -360,12 +425,24 @@ const App = () => {
                     </label>
                     <input
                         type="email"
-                        className="form-control"
+                        className={`form-control ${
+                            userValues.email_address_error ? `input-error` : ``
+                        }`}
                         id="email_address"
                         defaultValue={userValues.email_address}
                         disabled
                         readOnly
                     />
+                    <div
+                        className={`${
+                            userValues.email_address_error
+                                ? `visible error_message`
+                                : `invisible`
+                        }`}
+                    >
+                        {userValues.email_address_error &&
+                            "Please enter a valid email address"}
+                    </div>
                 </div>
 
                 <div className="col-12">
