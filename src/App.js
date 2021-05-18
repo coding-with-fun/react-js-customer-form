@@ -2,8 +2,11 @@ import React, { useState } from "react";
 
 const App = () => {
     let currentDate = new Date();
-    // currentDate.setDate(currentDate.getDate() + 30);
     currentDate = currentDate.toISOString().split("T")[0];
+
+    let maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 30);
+    maxDate = maxDate.toISOString().split("T")[0];
 
     const initialUserValues = {
         order_no: "123abc",
@@ -12,6 +15,8 @@ const App = () => {
 
         delivery_date: currentDate,
         delivery_date_error: false,
+
+        maxDate,
 
         delivery_time_slot: "",
         delivery_time_slot_error: false,
@@ -161,6 +166,7 @@ const App = () => {
                         value={userValues.delivery_date}
                         onChange={(e) => handleUserValues(e)}
                         min={initialUserValues.delivery_date}
+                        max={initialUserValues.maxDate}
                     />
                     <div
                         className={`${
